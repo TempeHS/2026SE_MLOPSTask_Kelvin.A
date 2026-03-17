@@ -21,7 +21,10 @@
   "workbench.iconTheme": "vscode-icons",
   "github.copilot.enable": {
     "*": true,
-    "python": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false,
+    "python": true,
     "html": false,
     "css": false,
     "sql": false,
