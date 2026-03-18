@@ -5,43 +5,48 @@
     {% if message %}
     <div class="alert alert-{{ message_type or 'danger' }}">{{ message }}</div>
     {% endif %}
-    <form action="/login" method="POST">
+    <form action="/Login.html" method="POST">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">Email address</label>
+        <label for="username" class="form-label">Username</label>
         <input
-          type="email"
+          type="text"
           class="form-control"
-          id="exampleInputEmail1"
-          name="email"
-          aria-describedby="emailHelp"
+          id="username"
+          name="username"
+          required
+          autocomplete="username"
         />
-        <div id="emailHelp" class="form-text">
-          I'll never share your email with anyone else. (maybe)
-        </div>
       </div>
       <div class="mb-3">
-        <label for="exampleInputPassword" class="form-label">Password</label>
+        <label for="password" class="form-label">Password</label>
         <div class="input-group">
           <input
             type="password"
             class="form-control"
-            id="exampleInputPassword"
+            id="password"
             name="password"
+            required
+            autocomplete="current-password"
           />
           <button
             class="btn btn-outline-secondary"
             type="button"
             id="togglePassword"
+            onclick="
+              const p = document.getElementById('password');
+              p.type = p.type === 'password' ? 'text' : 'password';
+              this.textContent = p.type === 'password' ? 'Show' : 'Hide';
+            "
           >
-            <i class="bi bi-eye"></i> Show
+            Show
           </button>
         </div>
       </div>
-      <div id="emailHelp" class="form-text">
-        <a href="/Signup.html">Sign Up</a>
+      <div class="form-text mb-3">
+        Don't have an account? <a href="/Signup.html">Sign Up</a>
       </div>
-      <button type="submit" class="btn btn-primary w-100">Submit</button>
+      <button type="submit" class="btn btn-primary w-100">Login</button>
     </form>
   </div>
 </div>

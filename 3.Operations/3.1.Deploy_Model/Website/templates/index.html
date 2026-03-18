@@ -5,7 +5,7 @@
   <div class="card mb-4">
     <div class="card-body">
       <h5 class="card-title">Enter Match Data</h5>
-      <form method="POST" action="/">
+      <form method="POST" action="/index.html">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
         <h6 class="mt-3">Gold</h6>
@@ -17,7 +17,6 @@
               class="form-control"
               id="blue_gold"
               name="blue_gold"
-              min="0"
               placeholder="e.g. 15000"
               required
             />
@@ -29,7 +28,6 @@
               class="form-control"
               id="red_gold"
               name="red_gold"
-              min="0"
               placeholder="e.g. 13000"
               required
             />
@@ -45,7 +43,6 @@
               class="form-control"
               id="blue_xp"
               name="blue_xp"
-              min="0"
               placeholder="e.g. 12000"
               required
             />
@@ -57,7 +54,6 @@
               class="form-control"
               id="red_xp"
               name="red_xp"
-              min="0"
               placeholder="e.g. 11000"
               required
             />
@@ -76,21 +72,29 @@
           Combined Advantage Score:
           <strong>{{ "%.3f"|format(scaled_value) }}</strong> (scale: -1 to 1)
         </p>
-        <p class="mb-0">
+        <p class="mb-1">
           Blue Team Win Chance: <strong>{{ win_percent }}%</strong>
         </p>
-        <div class="progress mt-2">
+
+        <!-- Fixed progress bar -->
+        <div class="progress mt-2" style="height: 24px">
           <div
             class="progress-bar bg-primary"
             role="progressbar"
-            style="width: {{ win_percent }}%"
+            style="width: {{ win_percent }}%;"
+            aria-valuenow="{{ win_percent }}"
+            aria-valuemin="0"
+            aria-valuemax="100"
           >
             Blue {{ win_percent }}%
           </div>
           <div
             class="progress-bar bg-danger"
             role="progressbar"
-            style="width: {{ 100 - win_percent }}%"
+            style="width: {{ 100 - win_percent }}%;"
+            aria-valuenow="{{ 100 - win_percent }}"
+            aria-valuemin="0"
+            aria-valuemax="100"
           >
             Red {{ 100 - win_percent }}%
           </div>
