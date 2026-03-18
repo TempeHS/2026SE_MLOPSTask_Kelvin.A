@@ -1,0 +1,11 @@
+{% extends 'layout.html' %} {% block content %}
+<h1>OFFLINE</h1>
+
+<script>
+  //To redirect when online
+  window.addEventListener("online", function () {
+    location.reload();
+  });
+</script>
+
+{% endblock %}

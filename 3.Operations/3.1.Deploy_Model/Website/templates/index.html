@@ -1,0 +1,114 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="container mt-4">
+  <h1>League of Legends Blue Win Predictor</h1>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Enter Match Data</h5>
+      <form method="POST" action="/">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+        <h6 class="mt-3">Gold</h6>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="blue_gold" class="form-label">Blue Team Gold</label>
+            <input
+              type="number"
+              class="form-control"
+              id="blue_gold"
+              name="blue_gold"
+              min="0"
+              placeholder="e.g. 15000"
+              required
+            />
+          </div>
+          <div class="col">
+            <label for="red_gold" class="form-label">Red Team Gold</label>
+            <input
+              type="number"
+              class="form-control"
+              id="red_gold"
+              name="red_gold"
+              min="0"
+              placeholder="e.g. 13000"
+              required
+            />
+          </div>
+        </div>
+
+        <h6 class="mt-3">Experience</h6>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="blue_xp" class="form-label">Blue Team XP</label>
+            <input
+              type="number"
+              class="form-control"
+              id="blue_xp"
+              name="blue_xp"
+              min="0"
+              placeholder="e.g. 12000"
+              required
+            />
+          </div>
+          <div class="col">
+            <label for="red_xp" class="form-label">Red Team XP</label>
+            <input
+              type="number"
+              class="form-control"
+              id="red_xp"
+              name="red_xp"
+              min="0"
+              placeholder="e.g. 11000"
+              required
+            />
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Predict</button>
+      </form>
+
+      {% if prediction is not none %}
+      <div
+        class="alert {% if prediction == 'Blue Wins' %}alert-success{% else %}alert-danger{% endif %} mt-4"
+      >
+        <h5>Prediction: {{ prediction }}</h5>
+        <p class="mb-1">
+          Combined Advantage Score:
+          <strong>{{ "%.3f"|format(scaled_value) }}</strong> (scale: -1 to 1)
+        </p>
+        <p class="mb-0">
+          Blue Team Win Chance: <strong>{{ win_percent }}%</strong>
+        </p>
+        <div class="progress mt-2">
+          <div
+            class="progress-bar bg-primary"
+            role="progressbar"
+            style="width: {{ win_percent }}%"
+          >
+            Blue {{ win_percent }}%
+          </div>
+          <div
+            class="progress-bar bg-danger"
+            role="progressbar"
+            style="width: {{ 100 - win_percent }}%"
+          >
+            Red {{ 100 - win_percent }}%
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Sigmoid Classification Graph</h5>
+      <img
+        src="data:image/png;base64,{{ graph }}"
+        class="img-fluid"
+        alt="Sigmoid Graph"
+      />
+    </div>
+  </div>
+</div>
+{% endblock %}
