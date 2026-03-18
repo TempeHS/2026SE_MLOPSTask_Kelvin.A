@@ -27,6 +27,7 @@ filename = "my_saved_model.sav"
 loaded_model = pickle.load(open(filename, "rb"))
 
 # Approximate max values for scaling to -1 -> 1
+# for GOLD_MAX the approximate
 GOLD_MAX = 20000
 XP_MAX = 15000
 

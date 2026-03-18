@@ -1,0 +1,56 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card p-4" style="width: 100%; max-width: 600px">
+    <h1 class="card-title text-center mb-3">Two-Factor Authentication</h1>
+    {% if message %}
+    <div class="alert alert-{{ message_type or 'danger' }}">{{ message }}</div>
+    {% endif %} {% if qr_code %}
+    <div class="alert alert-info">
+      <h5>First-time Setup</h5>
+      <p>Scan this QR code with your authenticator app</p>
+      <div class="text-center my-3">
+        <img src="{{ qr_code }}" alt="QR Code" style="max-width: 250px" />
+      </div>
+      <p>
+        <small>Or manually enter this key: <code>{{ secret_key }}</code></small>
+      </p>
+    </div>
+    {% endif %}
+
+    <form method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <div class="mb-3">
+        <label for="code" class="form-label">Verification Code</label>
+        <input
+          type="text"
+          class="form-control text-center"
+          id="code"
+          name="code"
+          placeholder="000000"
+          maxlength="6"
+          pattern="[0-9]{6}"
+          required
+          autocomplete="off"
+          style="font-size: 1.5rem; letter-spacing: 0.5rem"
+        />
+        <div class="form-text">
+          Enter the 6-digit code from your authenticator app
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Verify</button>
+    </form>
+    <div class="text-center mt-2">
+      <a href="/Login.html" class="text-muted">Cancel</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById("code").focus();
+  document.getElementById("code").addEventListener("input", function (e) {
+    if (e.target.value.length === 6) {
+      e.target.form.submit();
+    }
+  });
+</script>
+{% endblock %}

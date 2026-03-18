@@ -1,0 +1,48 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card p-4" style="width: 100%; max-width: 480px">
+    <h1 class="card-title text-center mb-3">Login</h1>
+    {% if message %}
+    <div class="alert alert-{{ message_type or 'danger' }}">{{ message }}</div>
+    {% endif %}
+    <form action="/login" method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Email address</label>
+        <input
+          type="email"
+          class="form-control"
+          id="exampleInputEmail1"
+          name="email"
+          aria-describedby="emailHelp"
+        />
+        <div id="emailHelp" class="form-text">
+          I'll never share your email with anyone else. (maybe)
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword" class="form-label">Password</label>
+        <div class="input-group">
+          <input
+            type="password"
+            class="form-control"
+            id="exampleInputPassword"
+            name="password"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="togglePassword"
+          >
+            <i class="bi bi-eye"></i> Show
+          </button>
+        </div>
+      </div>
+      <div id="emailHelp" class="form-text">
+        <a href="/Signup.html">Sign Up</a>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Submit</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
