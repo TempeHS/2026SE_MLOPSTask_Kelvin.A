@@ -65,21 +65,25 @@
             <button type="submit" class="btn btn-primary">Predict</button>
           </form>
 
-          {% if prediction is not none %}
+          {% if error %}
+          <div class="alert alert-warning mt-4">
+            <h5>{{ error }}</h5>
+          </div>
+          {% endif %} {% if prediction is not none %}
           <div
             class="alert {% if prediction == 'Blue Wins' %}alert-success{% else %}alert-danger{% endif %} mt-4"
           >
             <h5>Prediction: {{ prediction }}</h5>
+            {% if scaled_value is not none and win_percent is not none %}
             <p class="mb-1">
               Combined Advantage Score:
-              <strong>{{ "%.3f"|format(scaled_value) }}</strong> (scale: -1 to
-              1)
+              <strong>{{ "%.3f"|format(scaled_value) }}</strong>
+              (scale: -1 to 1)
             </p>
             <p class="mb-1">
               Blue Team Win Chance: <strong>{{ win_percent }}%</strong>
             </p>
 
-            <!-- Fixed progress bar -->
             <div class="progress mt-2" style="height: 24px">
               <div
                 class="progress-bar bg-primary"
@@ -102,6 +106,7 @@
                 Red {{ 100 - win_percent }}%
               </div>
             </div>
+            {% endif %}
           </div>
           {% endif %}
         </div>

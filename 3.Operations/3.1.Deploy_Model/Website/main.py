@@ -29,7 +29,7 @@ csrf = CSRFProtect(app)
 filename = "my_saved_model.sav"
 loaded_model = pickle.load(open(filename, "rb"))
 
-GOLD_MAX = 20000
+GOLD_MAX = 30000
 XP_MAX = 15000
 
 # ─── CSP Policy ───────────────────────────────────────────────────────────────
@@ -140,8 +140,8 @@ def login():
         return redirect(url_for("index"))
 
     if request.method == "POST":
-        username = request.form.get("username", "").strip()  # matches name="username"
-        password = request.form.get("password", "").strip()  # matches name="password"
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
 
         if not username or not password:
             app_log.warning("Login attempt with missing credentials.")
@@ -173,25 +173,17 @@ def signup():
         return redirect(url_for("index"))
 
     if request.method == "POST":
-        username = request.form.get("username", "").strip()
-        password = request.form.get("password", "").strip()
-        confirm = request.form.get("confirm_password", "").strip()
+        email = request.form.get("email")
+        password = request.form.get("password")
+        password_confirm = request.form.get("password_confirm")
 
-        if not username or not password or not confirm:
-            return render_template(
-                "Signup.html",
-                message="All fields are required.",
-                message_type="danger",
-            )
+        if not email or not password or not password_confirm:
+            return render_template("Signup.html", message="All fields are required")
 
-        if password != confirm:
-            return render_template(
-                "Signup.html",
-                message="Passwords do not match.",
-                message_type="danger",
-            )
+        if password != password_confirm:
+            return render_template("Signup.html", message="Passwords do not match")
 
-        success, msg = dbHandler.NewUser(username, password)
+        success, msg = dbHandler.NewUser(email, password)
         if not success:
             return render_template(
                 "Signup.html",
@@ -199,7 +191,7 @@ def signup():
                 message_type="danger",
             )
 
-        app_log.info("New user registered: %s", username)
+        app_log.info("New user registered: %s", email)
         return redirect(url_for("login"))
 
     return render_template("Signup.html")
@@ -251,6 +243,7 @@ def index():
     graph = generate_graph()
     scaled_value = None
     win_percent = None
+    error = None
 
     if request.method == "POST":
         blue_gold = request.form.get("blue_gold")
@@ -259,33 +252,39 @@ def index():
         red_xp = request.form.get("red_xp")
 
         if not all([blue_gold, red_gold, blue_xp, red_xp]):
-            return render_template(
-                "index.html",
-                prediction="Please fill in all fields.",
-                graph=graph,
-                scaled_value=None,
-                win_percent=None,
-            )
+            error = "Please fill in all fields."
+        else:
+            try:
+                blue_gold_f = float(blue_gold)
+                red_gold_f = float(red_gold)
+                blue_xp_f = float(blue_xp)
+                red_xp_f = float(red_xp)
 
-        try:
-            gold_diff = float(blue_gold) - float(red_gold)
-            xp_diff = float(blue_xp) - float(red_xp)
-            scaled_value = calculate_gold_xp_advantage(gold_diff, xp_diff)
+                if any(v < 0 for v in [blue_gold_f, red_gold_f, blue_xp_f, red_xp_f]):
+                    error = "Gold and XP values must be non-negative."
 
-            input_data = np.array([[scaled_value]])
-            result = loaded_model.predict(input_data)[0]
-            prob = loaded_model.predict_proba(input_data)[0][1]
-            prediction = "Blue Wins" if result == 1 else "Blue Loses"
-            win_percent = round(prob * 100, 1)
-            graph = generate_graph(user_value=scaled_value, user_prediction=prob)
-        except ValueError:
-            return render_template(
-                "index.html",
-                prediction="Please enter valid numbers.",
-                graph=graph,
-                scaled_value=None,
-                win_percent=None,
-            )
+                elif blue_gold_f > GOLD_MAX or red_gold_f > GOLD_MAX:
+                    error = f"Gold values cannot exceed {GOLD_MAX}."
+
+                elif blue_xp_f > XP_MAX or red_xp_f > XP_MAX:
+                    error = f"XP values cannot exceed {XP_MAX}."
+
+                else:
+                    gold_diff = blue_gold_f - red_gold_f
+                    xp_diff = blue_xp_f - red_xp_f
+                    scaled_value = calculate_gold_xp_advantage(gold_diff, xp_diff)
+
+                    input_data = np.array([[scaled_value]])
+                    result = loaded_model.predict(input_data)[0]
+                    prob = loaded_model.predict_proba(input_data)[0][1]
+                    prediction = "Blue Wins" if result == 1 else "Blue Loses"
+                    win_percent = round(prob * 100, 1)
+                    graph = generate_graph(
+                        user_value=scaled_value, user_prediction=prob
+                    )
+
+            except ValueError:
+                error = "Please enter valid numbers."
 
     return render_template(
         "index.html",
@@ -293,6 +292,7 @@ def index():
         graph=graph,
         scaled_value=scaled_value,
         win_percent=win_percent,
+        error=error,
     )
 
 

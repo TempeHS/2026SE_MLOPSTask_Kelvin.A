@@ -6,7 +6,6 @@ body.login-page {
   filter: blur(5px);
 }
 
-/* Login page background */
 body.login-page::before {
   content: "";
   position: fixed;
@@ -19,7 +18,6 @@ body.login-page::before {
   transform: scale(1.1);
 }
 
-/* Signup page background */
 body.signup-page {
   background-image: url("../images/league_of_legends.jpg");
   background-size: cover;
@@ -28,7 +26,6 @@ body.signup-page {
   filter: blur(5px);
 }
 
-/* Signup page background */
 body.signup-page::before {
   content: "";
   position: fixed;
@@ -41,13 +38,12 @@ body.signup-page::before {
   transform: scale(1.1);
 }
 
-/* Index page background */
 body.index-page {
   background-image: url("../images/irelia.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  filter: blur(5px);
+  filter: blur(4px);
 }
 
 .index-bg-wrapper {
@@ -64,24 +60,21 @@ body.index-page {
   background-image: url("../images/irelia.jpg");
   background-size: cover;
   background-position: center;
-  filter: blur(8px);
+  filter: blur(4px);
   z-index: -1;
   transform: scale(1.1);
 }
 
-/* Semi-transparent cards for index page */
 .index-bg-wrapper .card {
   background-color: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(4px);
   border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
-/* White h1 for index page */
 .index-bg-wrapper h1 {
   color: white;
 }
 
-/* Login & Signup background */
 .lol-bg-wrapper {
   position: relative;
   min-height: 100vh;
@@ -99,9 +92,8 @@ body.index-page {
   transform: scale(1.1);
 }
 
-/* Semi-transparent card for login & signup */
 .lol-bg-wrapper .card {
   background-color: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(4x);
   border: 1px solid rgba(255, 255, 255, 0.4);
 }

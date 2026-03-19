@@ -25,7 +25,6 @@ def init_2fa_column():
         con.commit()
         con.close()
     except sql.OperationalError:
-        # Column already exists
         pass
 
 
@@ -92,7 +91,6 @@ def NewUser(email, password):
     con = sql.connect(DB)
     cur = con.cursor()
     try:
-        # Hash the password before storing
         hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
         cur.execute(
             "INSERT INTO id7_tusers (username, password) VALUES (?,?)",
@@ -149,7 +147,6 @@ def get_2fa_key(email):
             con.close()
             return row[0]
         else:
-            # Generate new key
             new_key = pyotp.random_base32()
             cur.execute(
                 "UPDATE id7_tusers SET twofa_key =? WHERE username =?", (new_key, email)
